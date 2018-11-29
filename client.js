@@ -9,19 +9,25 @@ $(function () {
 			console.log('Longitude = ' + long);
 			//lat = lat <= 0 ? Math.abs(lat) : lat;
 			//long = long <= 0 ? Math.abs(long) : long;
-			console.log('Latitude = ' + lat);
-			console.log('Longitude = ' + long);
-			var latitude_d = (lat/100).toString().split(".")[0];
-			console.log(`Lat_D = ${latitude_d}`);
-			var lat_m = lat.toString().substring(2);
-			var lat_dd = parseFloat(latitude_d) + parseFloat(lat_m) / 60.0;
-			var long_d = (long/100).toString().split(".")[0];
-			var long_m = long.toString().substring(2);
-			var long_dd = 0.0;
+			var lat_neg = (lat < 0);
+			var long_neg = (long < 0);
+			var lat_d = lat_neg ? lat.toString().substring(0, 3) : lat.toString().substring(0, 2);
+			console.log(`Lat_D = ${lat_d}`);
+			var lat_m = lat_neg ? lat.toString().substring(3) : lat.toString().substring(2);
+			var lat_dd = parseFloat(lat_d) + parseFloat(lat_m) / 60.0;
+			var long_d = long_neg ? long.toString().substring(0, 3) : long.toString().substring(0, 2);
+			var long_m = long_neg ? long.toString().substring(3) : long.toString().substring(2);
+//			var long_dd = parseFloat(long_d) + parseFloat(long_m) / 60.0;
+
 			if(long_d > 0)
-				lat_dd = parseFloat(long_d) + parseFloat(long_m) / 60.0;
+				long_dd = parseFloat(long_d) + parseFloat(long_m) / 60.0;
 			else
-				lat_dd = parseFloat(long_d) - parseFloat(long_m) / 60.0;
+				long_dd = parseFloat(long_d) - parseFloat(long_m) / 60.0;
+				
+			if(lat_d > 0)
+				lat_dd = parseFloat(lat_d) + parseFloat(lat_m) / 60.0;
+			else
+				lat_dd = parseFloat(lat_d) - parseFloat(lat_m) / 60.0;
 			console.log(lat_dd);
 			console.log(long_dd);
 		}
@@ -85,9 +91,9 @@ $(function () {
 					var map = new google.maps.Map(document.getElementById('mapid'), {zoom: 4, center: s });
 					var marker = new google.maps.Marker({position: s, map: map});
 					mapHasBeenSet = true;
-					setInterval(1500, function() { 
+					setInterval(function() { 
 						mapHasBeenSet = false;
-					});
+					}, 3600000);
 				}
 			}
 		} 
@@ -96,9 +102,5 @@ $(function () {
 			console.log('This doesn\'t look like a valid JSON: ', message.data);
 			return;
 		}
-		    // handle incoming message
 	};
-	/*setTimeout(function() {
-		connection.send("req");
-	}, 2000); */
 });
