@@ -31,5 +31,5 @@
 *.out
 *.app
 
-node_modules/
-poco/
+/node_modules/
+/poco/
