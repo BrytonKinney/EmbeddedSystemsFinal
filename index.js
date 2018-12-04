@@ -45,5 +45,5 @@ server.on('upgrade', function upgrade(request, socket, head) {
 		wss.emit('connection', ws, request);
     });
 });
-
+console.log('Beginning listen on port 8080');
 server.listen(8080);

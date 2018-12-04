@@ -5,7 +5,6 @@
 #include "json.hpp"
 #include <exception>
 #include <stdexcept>
-#include <websocketpp/client.hpp>
 #include "WS.h"
 
 void print_info(BmpData data, LsmData lsm_data, GpsData gps_data);
@@ -15,7 +14,7 @@ using json = nlohmann::json;
 
 int main() 
 {
-	WebSock sock("smartmirror-bryton.local", 8080);
+	WebSock sock("localhost", 8080);
 	while(true) 
 	{
 		BMP280 bmp;

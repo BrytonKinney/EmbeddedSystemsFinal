@@ -1,10 +1,6 @@
 #ifndef _NEO6M_H_
 #define _NEO6M_H_
 #include "Common.h"
-#include <nmea.h>
-#include <nmea/gpgll.h>
-#include <nmea/gpgga.h>
-#include <nmea/gprmc.h>
 #endif
 struct GpsData 
 {

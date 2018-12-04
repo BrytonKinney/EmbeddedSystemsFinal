@@ -40,7 +40,7 @@ $(function () {
 	// if user is running mozilla then use it's built-in WebSocket
 	window.WebSocket = window.WebSocket || window.MozWebSocket;
 	var content = $('#content');
-	var connection = new WebSocket('ws://smartmirror-bryton.local:8080', "nav");
+	var connection = new WebSocket('ws://localhost:8080', "nav");
 	if (!window.WebSocket) {
 		content.html($('<p>', { text:'Sorry, but your browser doesn\'t support WebSocket.'}));
 		input.hide();
