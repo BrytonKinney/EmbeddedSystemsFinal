@@ -14,5 +14,8 @@ public:
 	WebSock(std::string hostname, int port);
 	void Send(std::string payload);
 private:
+	std::string HostName;
+	int PortNum;
 	Poco::Net::WebSocket * webSocket;
+	void InitWS(std::string hostname, int port);
 };

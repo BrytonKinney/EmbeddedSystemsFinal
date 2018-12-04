@@ -49,9 +49,11 @@ void LSM303::GetAccelData(int * buffer)
 }
 LsmData LSM303::GetReadings()
 {
+	LsmData data;
 	if((this->I2C_LSM_FILE = open(this->I2C_LOCATION, O_RDWR)) < 0)
 	{
 		std::cout << "Unable to open I2C dev file." << std::endl;
+		return data;
 	}
 	// Configure & grab I2C accelerometer device via its register
 	ioctl(this->I2C_LSM_FILE, I2C_SLAVE, this->I2C_ACCEL_ADDR);
@@ -63,7 +65,6 @@ LsmData LSM303::GetReadings()
 	usleep(10000);
 	int accel_data[3];
 	this->GetAccelData(accel_data);
-	LsmData data;
 	data.X_Accel = accel_data[0] / 1000.0;
 	data.Y_Accel = accel_data[1] / 1000.0;
 	data.Z_Accel = accel_data[2] / 1000.0;

@@ -32,13 +32,15 @@ BmpData BMP280::GetReadings()
 	this->I2C_FILE= open(BMP280::I2C_LOCATION, O_RDWR);
 	if(this->I2C_FILE< 0)
 	{
-		std::cout << "Unable to open the I2C bus." << std::endl;
+		std::cout << "Unable to open the I2C bus. Retrying in 1 second." << std::endl;
+		usleep(100000);
+		this->I2C_FILE= open(BMP280::I2C_LOCATION, O_RDWR);
 	}
-	ioctl(BMP280::I2C_FILE, I2C_SLAVE, BMP280::I2C_DEV_ADDR);
-	char reg[1] = {BMP280::I2C_DATA_ADDR};
-	write(BMP280::I2C_FILE, reg, 1);
+	ioctl(this->I2C_FILE, I2C_SLAVE, this->I2C_DEV_ADDR);
+	char reg[1] = {this->I2C_DATA_ADDR};
+	write(this->I2C_FILE, reg, 1);
 	char buff[24] = {0};
-	read(BMP280::I2C_FILE, buff, 24);
+	read(this->I2C_FILE, buff, 24);
 	int tempCoeff[3] = {0};
 	this->GetTemperatureCoefficients(buff, tempCoeff);
 	int t_coeff[3] = {0};

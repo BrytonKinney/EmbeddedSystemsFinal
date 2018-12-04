@@ -1,6 +1,5 @@
 #include "WS.h"
-
-WebSock::WebSock(std::string hostname, int port) 
+void WebSock::InitWS(std::string hostname, int port) 
 {
 	using Poco::Net::HTTPClientSession;
 	using Poco::Net::HTTPRequest;
@@ -16,11 +15,12 @@ WebSock::WebSock(std::string hostname, int port)
 	request.set("connection", "upgrade");
 	HTTPResponse resp;
 	this->webSocket = new WebSocket(httpSession, request, resp);
-/*	char receiveBuff[1024];
-	int flags = 0;
-	int rlen = this->webSocket->receiveFrame(receiveBuff, 256, flags);
-	std::cout << "Received: " << receiveBuff << std::endl;
-*/
+}
+WebSock::WebSock(std::string hostname, int port) 
+{
+	this->HostName = hostname;
+	this->PortNum = port;
+	this->InitWS(hostname, port);
 }
 
 void WebSock::Send(std::string payload)
@@ -36,5 +36,7 @@ void WebSock::Send(std::string payload)
 	catch(std::exception &e) 
 	{
 		std::cout << "Exception: " << e.what() << std::endl;
+		this->webSocket->close();
+		this->InitWS(this->HostName, this->PortNum);
 	}
 }

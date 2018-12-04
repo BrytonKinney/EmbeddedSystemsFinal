@@ -47,7 +47,11 @@ $(function () {
 		$('span').hide();
 		return;
 	}
-
+	// update the map every 5 minutes
+	setInterval(function() { 
+		console.log("Resetting map..");
+		mapHasBeenSet = false;
+	}, 300000);
 	connection.onopen = function () {
 	// connection is opened and ready to use
 		console.log('Connection opened.');
@@ -91,9 +95,6 @@ $(function () {
 					var map = new google.maps.Map(document.getElementById('mapid'), {zoom: 4, center: s });
 					var marker = new google.maps.Marker({position: s, map: map});
 					mapHasBeenSet = true;
-					setInterval(function() { 
-						mapHasBeenSet = false;
-					}, 3600000);
 				}
 			}
 		} 
