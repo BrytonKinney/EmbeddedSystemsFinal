@@ -1,9 +1,12 @@
 #include "NEO6M.h"
-#include <wiringSerial.h>
 
-NEO6M::NEO6M() 
+// Utility functions
+void check_numeric_token(std::string& token)
 {
+	if(token == "")
+		token == "0.0";
 }
+
 GpsData parse_sentence(std::string str)
 {
 	std::string token;
@@ -23,8 +26,7 @@ GpsData parse_sentence(std::string str)
 			case 1:
 				break;
 			case 2:
-				if(token == "")
-					token = "0.0";
+				check_numeric_token(token);
 				data.Latitude = std::stod(token, &sz);
 				break;
 			case 3:
@@ -33,8 +35,7 @@ GpsData parse_sentence(std::string str)
 					data.Latitude = -data.Latitude;
 				break;
 			case 4:
-				if(token == "")
-					token = "0.0";
+				check_numeric_token(token);
 				data.Longitude = std::stod(token, &sz);
 			case 5:
 				data.EW = token;
@@ -45,9 +46,12 @@ GpsData parse_sentence(std::string str)
 		}
 		i++;
 	}
-	std::cout << "Data object filled: " << data.Longitude << " - " << data.Latitude << std::endl;
 	return data;
 }
+
+// NEO6M class implementations
+NEO6M::NEO6M(){}
+
 GpsData NEO6M::GetReadings()
 {
 	FILE * file = fopen("/dev/serial0", "r");
@@ -58,12 +62,10 @@ GpsData NEO6M::GetReadings()
 		{
 			std::stringstream ss;
 			ss << line;
-			//std::cout << "LINE: " << line << std::endl;
 			if(ss.str().rfind("$GPGGA", 0) == 0)
 			{
 				std::string str = ss.str();
 				return parse_sentence(str);
-//				break;
 			}
 			else
 				ss.str(std::string());

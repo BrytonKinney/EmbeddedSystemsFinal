@@ -14,6 +14,7 @@ int * BMP280::GetTemperatureCoefficients(char buffer[24], int tempCoefficients[3
 	return tempCoefficients;
 }
 
+
 int * BMP280::GetPressureCoefficients(char buffer[24], int pressureCoefficients[9])
 {
 	for(int i = 0; i < 10; i++)
@@ -25,6 +26,14 @@ int * BMP280::GetPressureCoefficients(char buffer[24], int pressureCoefficients[
 		}
 	}
 	return pressureCoefficients;
+}
+
+void BMP280::SetConfigurationOption(char reg, char opt)
+{
+	char config[2] = {0};
+	config[0] = reg;
+	config[1] = opt;
+	write(this->I2C_FILE, config, 2);
 }
 
 BmpData BMP280::GetReadings()
@@ -54,16 +63,12 @@ BmpData BMP280::GetReadings()
 	
 	// Select control measurement register(0xF4)
 	// Normal mode, temp and pressure over sampling rate = 1(0x27)
-	char config[2] = {0};
-	config[0] = this->I2C_CTRL_MSMT_REG;
-	config[1] = this->I2C_OVERSAMPLING_RATE;
-	write(this->I2C_FILE, config, 2);
+	this->SetConfigurationOption(this->I2C_CTRL_MSMT_REG, this->I2C_OVERSAMPLING_RATE);
 
 	// Select config register(0xF5)
 	// Stand_by time = 1000 ms(0xA0)
-	config[0] = this->I2C_CONFIG_REG;
-	config[1] = this->I2C_STANDBY_TIME;
-	write(this->I2C_FILE, config, 2);
+	this->SetConfigurationOption(this->I2C_CONFIG_REG, this->I2C_STANDBY_TIME);
+
 	usleep(10000);
 	// Read 8 bytes of buff from register(0xF7)
 	// pressure msb1, pressure msb, pressure lsb, temp msb1, temp msb, temp lsb, humidity lsb, humidity msb

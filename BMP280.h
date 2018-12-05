@@ -27,4 +27,5 @@ private:
 	int * GetTemperatureCoefficients(char buffer[24], int tempCoefficients[3]);
 	int * GetPressureCoefficients(char buffer[24], int pressureCoefficients[9]);
 	BmpData CalculateData(long adc_p, long adc_t, int tempCoeff[], int pressCoeff[]);
+	void SetConfigurationOption(char reg, char opt);
 };
