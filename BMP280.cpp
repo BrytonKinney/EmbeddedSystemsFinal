@@ -38,10 +38,12 @@ void BMP280::SetConfigurationOption(char reg, char opt)
 
 BmpData BMP280::GetReadings()
 {
-	this->I2C_FILE= open(BMP280::I2C_LOCATION, O_RDWR);
-	if(this->I2C_FILE< 0)
+	usleep(10000);
+	this->I2C_FILE = open(BMP280::I2C_LOCATION, O_RDWR);
+	if(this->I2C_FILE < 0)
 	{
 		std::cout << "Unable to open the I2C bus. Retrying in 1 second." << std::endl;
+		std::cout << errno << std::endl;
 		usleep(100000);
 		this->I2C_FILE= open(BMP280::I2C_LOCATION, O_RDWR);
 	}
@@ -118,7 +120,8 @@ BmpData BMP280::CalculateData(long adc_p, long adc_t, int tempCoeff[], int press
 	bmp.Temp_F = fTemp;
 	bmp.Temp_C = cTemp;
 	bmp.Pressure = pressure;
-	close(this->I2C_FILE);
+	if(close(this->I2C_FILE) < 0)
+		std::cout << errno << std::endl;
 	return bmp;
 }
 

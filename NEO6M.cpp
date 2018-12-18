@@ -1,13 +1,21 @@
 #include "NEO6M.h"
 
 // Utility functions
-void check_numeric_token(std::string& token)
+bool NEO6M::CheckToken(std::string& token)
 {
-	if(token == "")
-		token == "0.0";
+	//std::cout << "Checking token: " << token << std::endl;
+	return token == "";
 }
-
-GpsData parse_sentence(std::string str)
+bool NEO6M::ValidChecksum(std::string sentence)
+{
+	char check = 0;
+	for(int c = 0; c < sentence.length(); c++)
+	{
+		check = char(check ^ sentence.charAt(c));
+	}
+	return check;
+}
+GpsData NEO6M::ParseSentence(std::string str)
 {
 	std::string token;
 	std::string delimiter = ",";
@@ -26,8 +34,9 @@ GpsData parse_sentence(std::string str)
 			case 1:
 				break;
 			case 2:
-				check_numeric_token(token);
-				data.Latitude = std::stod(token, &sz);
+				data.IsEmpty = this->CheckToken(token);
+				if(!data.IsEmpty)
+					data.Latitude = std::stod(token, &sz);
 				break;
 			case 3:
 				data.NS = token;
@@ -35,8 +44,9 @@ GpsData parse_sentence(std::string str)
 					data.Latitude = -data.Latitude;
 				break;
 			case 4:
-				check_numeric_token(token);
-				data.Longitude = std::stod(token, &sz);
+				data.IsEmpty = this->CheckToken(token);
+				if(!data.IsEmpty)
+					data.Longitude = std::stod(token, &sz);
 			case 5:
 				data.EW = token;
 				if(data.EW == "W")
@@ -46,6 +56,7 @@ GpsData parse_sentence(std::string str)
 		}
 		i++;
 	}
+	this->LastAvailableData = data;
 	return data;
 }
 
@@ -65,7 +76,8 @@ GpsData NEO6M::GetReadings()
 			if(ss.str().rfind("$GPGGA", 0) == 0)
 			{
 				std::string str = ss.str();
-				return parse_sentence(str);
+				std::cout << this->ValidChecksum(ss.str());
+				return this->ParseSentence(str);
 			}
 			else
 				ss.str(std::string());

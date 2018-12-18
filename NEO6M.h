@@ -16,10 +16,16 @@ struct GpsData
 	std::string Meter;
 	float Height;
 	std::string Checksum;
+	bool IsEmpty;
 };
 class NEO6M 
 {
 public:
 	NEO6M();
 	GpsData GetReadings();
+private:
+	GpsData LastAvailableData;
+	bool CheckToken(std::string& token);
+	GpsData ParseSentence(std::string str);
+	bool ValidChecksum(std::string sentence);
 };

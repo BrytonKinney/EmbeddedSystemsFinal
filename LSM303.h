@@ -31,16 +31,16 @@ public:
 	LsmData GetReadings();
 private:
 	char ReadRegister(char reg);
-	void GetMagData(int * buffer);
-	void GetAccelData(int * buffer);
+	void GetMagData(LsmData * data);
+	void GetAccelData(LsmData * data);
 	int I2C_LSM_FILE;
 	const char * I2C_LOCATION = "/dev/i2c-1";
 	// Accelerometer registers & data
 	char I2C_ACCEL_ADDR = 0x19;
 	char I2C_ACCEL_CONF_REG = 0x20;
-	char I2C_ACCEL_XYZ_CLK_REG = 0x27;
+	char I2C_ACCEL_XYZ_CLK_REG = 0x47;// 0x27; // enable x,y,z axes
 	char I2C_CTRL_REG_4 = 0x23;
-	char I2C_REG_4_CFG = 0x00;
+	char I2C_REG_4_CFG = 0x08; //0x08; // Enable high resolution mode & +-2g scale //0x00;
 	char I2C_ACCEL_X_LSB_REG = 0x28;
 	char I2C_ACCEL_X_MSB_REG = 0x29;
 	char I2C_ACCEL_Y_LSB_REG = 0x2A;
@@ -52,7 +52,7 @@ private:
 	char I2C_MR_REG = 0x02;
 	char I2C_MAG_CONT = 0x00;
 	char I2C_CRA_REG = 0x00;
-	char I2C_MAG_OUT_RATE = 0x10;
+	char I2C_MAG_OUT_RATE = 0x0C; // 0x10;
 	char I2C_CRB_REG = 0x01;
 	char I2C_MAG_GAIN = 0x20;
 	char I2C_MAG_X_MSB_REG = 0x03;

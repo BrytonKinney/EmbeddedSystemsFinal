@@ -40,19 +40,21 @@ void print_info(BmpData data, LsmData lsm_data, GpsData gps_data)
 	std::cout << "Temperature: " << data.Temp_F << " Fahrenheit" << std::endl;
 	std::cout << "Temperature: " << data.Temp_C << " Celsius" << std::endl;
 	std::cout << "Pressure: " << data.Pressure << " hectoPascals" << std::endl;
-	std::cout << "X Acceleration: " << lsm_data.X_Accel << " gs" << std::endl;
-	std::cout << "Y Acceleration: " << lsm_data.Y_Accel << " gs" << std::endl;
-	std::cout << "Z Acceleration: " << lsm_data.Z_Accel << " gs" << std::endl;
+	std::cout << "X Acceleration: " << lsm_data.X_Accel << " mgs" << std::endl;
+	std::cout << "Y Acceleration: " << lsm_data.Y_Accel << " mgs" << std::endl;
+	std::cout << "Z Acceleration: " << lsm_data.Z_Accel << " mgs" << std::endl;
 	std::cout << "Pitch: " << lsm_data.Pitch << " degrees" << std::endl;
 	std::cout << "Roll: " << lsm_data.Roll << " degrees" << std::endl;
-	std::cout << "X Magnetic Field Magnitude: " << lsm_data.X_Mag << std::endl;
-	std::cout << "Y Magnetic Field Magnitude: " << lsm_data.Y_Mag << std::endl;
-	std::cout << "Z Magnetic Field Magnitude: " << lsm_data.Z_Mag << std::endl;
+	std::cout << "Yaw: " << lsm_data.Yaw << " degrees" << std::endl;
+	std::cout << "X Magnetic Field Magnitude: " << lsm_data.X_Mag << " mGauss" << std::endl;
+	std::cout << "Y Magnetic Field Magnitude: " << lsm_data.Y_Mag << " mGauss" << std::endl;
+	std::cout << "Z Magnetic Field Magnitude: " << lsm_data.Z_Mag << " mGauss" << std::endl;
 	std::cout << "Heading: " << lsm_data.Heading << " degrees" << std::endl;
-	std::cout << "Longitude: " << gps_data.Longitude << std::endl;
-	std::cout << "Latitude: " << gps_data.Latitude << std::endl;
-	//std::cout << "Longitude: " << gps_data->longitude.degrees << " degrees " << gps_data->longitude.minutes << " minutes " << gps_data->longitude.cardinal << std::endl;
-	//std::cout << "Latitude: " << gps_data->latitude.degrees << " degrees " << gps_data->latitude.minutes << " minutes " << gps_data->latitude.cardinal << std::endl;
+	if(!gps_data.IsEmpty)
+	{
+		std::cout << "Longitude: " << gps_data.Longitude << std::endl;
+		std::cout << "Latitude: " << gps_data.Latitude << std::endl;
+	}
 	//std::cout << "Number of satellites: " << gps_data->n_satellites << std::endl;
 	//std::cout << "Altitude (per GPS): " << gps_data->altitude << " " << gps_data->altitude_unit << std::endl;
 }
@@ -65,6 +67,7 @@ void send_info(BmpData data, LsmData lsm_data, GpsData gps_data, WebSock& sock)
 			{
 				{"pitch", lsm_data.Pitch},
 				{"roll", lsm_data.Roll},
+				{"yaw", lsm_data.Yaw},
 				{"x_mag", lsm_data.X_Mag},
 				{"y_mag", lsm_data.Y_Mag},
 				{"z_mag", lsm_data.Z_Mag},
