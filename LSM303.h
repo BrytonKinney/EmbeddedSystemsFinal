@@ -2,14 +2,7 @@
 #define _LSM303_H_
 #include "Common.h"
 #endif
-enum LsmCoefficients {
-	ACC_X,
-	ACC_Y,
-	ACC_Z,
-	MAG_X,
-	MAG_Y,
-	MAG_Z
-};
+
 struct LsmData
 {
 	float Heading;
@@ -27,7 +20,8 @@ struct LsmData
 class LSM303 
 {
 public:
-	LSM303();
+	LSM303(int i2c_fd);
+	~LSM303();
 	LsmData GetReadings();
 private:
 	char ReadRegister(char reg);

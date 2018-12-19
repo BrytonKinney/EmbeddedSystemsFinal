@@ -22,6 +22,10 @@ WebSock::WebSock(std::string hostname, int port)
 	this->PortNum = port;
 	this->InitWS(hostname, port);
 }
+WebSock::~WebSock() 
+{
+	this->webSocket->shutdown();
+}
 
 void WebSock::Send(std::string payload)
 {	
@@ -36,7 +40,7 @@ void WebSock::Send(std::string payload)
 	catch(std::exception &e) 
 	{
 		std::cout << "Exception: " << e.what() << std::endl;
-		this->webSocket->close();
+		this->webSocket->shutdown();
 		this->InitWS(this->HostName, this->PortNum);
 	}
 }

@@ -11,7 +11,8 @@ struct BmpData
 class BMP280
 {
 public:
-	BMP280();
+	BMP280(int i2c_fd);
+	~BMP280();
 	BmpData GetReadings();
 private:
 	const char * I2C_LOCATION = "/dev/i2c-1";

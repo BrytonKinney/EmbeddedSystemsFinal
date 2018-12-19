@@ -7,7 +7,8 @@ const url = require('url');
 const server = http.createServer(function(request, response) {
 	try {
 		console.log((new Date()) + ' Received request for ' + request.url);
-		var fpath = path.join(__dirname, request.url);
+		var _url = request.url === "/" ? "/index.html" : request.url;
+		var fpath = path.join(__dirname, _url);
 		console.log(`Serving file for request: ${fpath}`);
 		var contentType = "";
 		response.writeHead(200, {'Content-Type': 'text/html'});

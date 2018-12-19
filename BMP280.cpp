@@ -1,6 +1,13 @@
 #include "BMP280.h"
 
-BMP280::BMP280() {}
+BMP280::BMP280(int i2c_fd) 
+{
+	this->I2C_FILE = i2c_fd;
+	std::cout << "BMP: " << this->I2C_FILE << std::endl;
+}
+
+BMP280::~BMP280() {}
+
 int * BMP280::GetTemperatureCoefficients(char buffer[24], int tempCoefficients[3])
 {
 	for(int i = 0; i < 3; i++)
@@ -39,14 +46,6 @@ void BMP280::SetConfigurationOption(char reg, char opt)
 BmpData BMP280::GetReadings()
 {
 	usleep(10000);
-	this->I2C_FILE = open(BMP280::I2C_LOCATION, O_RDWR);
-	if(this->I2C_FILE < 0)
-	{
-		std::cout << "Unable to open the I2C bus. Retrying in 1 second." << std::endl;
-		std::cout << errno << std::endl;
-		usleep(100000);
-		this->I2C_FILE= open(BMP280::I2C_LOCATION, O_RDWR);
-	}
 	ioctl(this->I2C_FILE, I2C_SLAVE, this->I2C_DEV_ADDR);
 	char reg[1] = {this->I2C_DATA_ADDR};
 	write(this->I2C_FILE, reg, 1);
@@ -120,8 +119,6 @@ BmpData BMP280::CalculateData(long adc_p, long adc_t, int tempCoeff[], int press
 	bmp.Temp_F = fTemp;
 	bmp.Temp_C = cTemp;
 	bmp.Pressure = pressure;
-	if(close(this->I2C_FILE) < 0)
-		std::cout << errno << std::endl;
 	return bmp;
 }
 

@@ -12,6 +12,7 @@ class WebSock
 {
 public:
 	WebSock(std::string hostname, int port);
+	~WebSock();
 	void Send(std::string payload);
 private:
 	std::string HostName;

@@ -9,9 +9,9 @@ bool NEO6M::CheckToken(std::string& token)
 bool NEO6M::ValidChecksum(std::string sentence)
 {
 	char check = 0;
-	for(int c = 0; c < sentence.length(); c++)
+	for(char& c : sentence)
 	{
-		check = char(check ^ sentence.charAt(c));
+		check = char(check ^ c);
 	}
 	return check;
 }

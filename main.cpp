@@ -15,18 +15,22 @@ using json = nlohmann::json;
 int main() 
 {
 	WebSock sock("localhost", 8080);
+	int i2c_fd = open("/dev/i2c-1", O_RDWR);
 	while(true) 
 	{
-		BMP280 bmp;
-		LSM303 lsm;
-		NEO6M neo;
-		BmpData data = bmp.GetReadings();
+		BMP280 * bmp = new BMP280(i2c_fd);
+		BmpData data = bmp->GetReadings();
 		std::cout << "BMP data gathered." << std::endl;
+		delete bmp;
 		usleep(10000);
-		LsmData lsm_data = lsm.GetReadings();
+		LSM303 * lsm = new LSM303(i2c_fd);
+		LsmData lsm_data = lsm->GetReadings();
+		delete lsm;
 		std::cout << "LSM data gathered." << std::endl;
-		usleep(5000);
-		GpsData gps_data = neo.GetReadings();
+		usleep(10000);
+		NEO6M * neo = new NEO6M();
+		GpsData gps_data = neo->GetReadings();
+		delete neo;
 		std::cout << "GPS data gathered." << std::endl;
 		usleep(1000);
 		print_info(data, lsm_data, gps_data);

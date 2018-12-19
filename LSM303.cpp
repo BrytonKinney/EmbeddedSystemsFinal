@@ -3,20 +3,23 @@
 void check_overflow(int * buffer, char * byte_arr) 
 {
 	buffer[0] = (byte_arr[1] << 8) | byte_arr[0];
-	//std::cout << "Buffer[0] = " << buffer[0] << std::endl;
 	if(buffer[0] > 32767)
 		buffer[0] -= 65536;
 	buffer[1] = (byte_arr[3] << 8) | byte_arr[2];
-	//std::cout << "Buffer[1] = " << buffer[1] << std::endl;
 	if(buffer[1] > 32767)
 		buffer[1] -= 65536;
 	buffer[2] = (byte_arr[5] << 8) | byte_arr[4];
-	//std::cout << "Buffer[2] = " << buffer[2] << std::endl;
 	if(buffer[2] > 32767)
 		buffer[2] -= 65536;
 }
 
-LSM303::LSM303() {}
+LSM303::LSM303(int i2c_fd) 
+{
+	this->I2C_LSM_FILE = i2c_fd;
+	std::cout << "LSM: " << this->I2C_LSM_FILE << std::endl;
+}
+
+LSM303::~LSM303() {}
 
 char LSM303::ReadRegister(char reg)
 {
@@ -43,7 +46,7 @@ void LSM303::GetMagData(LsmData * data)
 	data->X_Mag = buffer[0];
 	data->Y_Mag = buffer[1];
 	data->Z_Mag = buffer[2];
-	data->Heading = ((atan2((float)data->Y_Mag, (float)data->X_Mag) * 180.0 )/ 3.14159);
+	data->Heading = ((atan2((float)data->Y_Mag, (float)data->X_Mag) * 180.0 ) / 3.14159);
 	data->Heading = data->Heading < 0 ? data->Heading += 360 : data->Heading;
 }
 
@@ -70,11 +73,6 @@ void LSM303::GetAccelData(LsmData * data)
 LsmData LSM303::GetReadings()
 {
 	LsmData data;
-	if((this->I2C_LSM_FILE = open(this->I2C_LOCATION, O_RDWR)) < 0)
-	{
-		std::cout << "Unable to open I2C dev file." << std::endl;
-		return data;
-	}
 	// Configure & grab I2C accelerometer device via its register
 	ioctl(this->I2C_LSM_FILE, I2C_SLAVE, this->I2C_ACCEL_ADDR);
 	char cfg[2] = { this->I2C_ACCEL_CONF_REG, this->I2C_ACCEL_XYZ_CLK_REG }; 
@@ -103,8 +101,6 @@ LsmData LSM303::GetReadings()
 
 	this->GetMagData(&data);
 
-	if(close(this->I2C_LSM_FILE) < 0)
-		std::cout << errno << std::endl;
 	usleep(10000);
 	return data;
 }
