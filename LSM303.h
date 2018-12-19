@@ -6,9 +6,9 @@
 struct LsmData
 {
 	float Heading;
-	double X_Accel;
-	double Y_Accel;
-	double Z_Accel;
+	int X_Accel;
+	int Y_Accel;
+	int Z_Accel;
 	float Roll;
 	float Pitch;
 	float Yaw;
@@ -34,7 +34,7 @@ private:
 	char I2C_ACCEL_CONF_REG = 0x20;
 	char I2C_ACCEL_XYZ_CLK_REG = 0x47;// 0x27; // enable x,y,z axes
 	char I2C_CTRL_REG_4 = 0x23;
-	char I2C_REG_4_CFG = 0x08; //0x08; // Enable high resolution mode & +-2g scale //0x00;
+	char I2C_REG_4_CFG = 0x01;//0x08; //0x08; // Enable high resolution mode & +-2g scale //0x00;
 	char I2C_ACCEL_X_LSB_REG = 0x28;
 	char I2C_ACCEL_X_MSB_REG = 0x29;
 	char I2C_ACCEL_Y_LSB_REG = 0x2A;

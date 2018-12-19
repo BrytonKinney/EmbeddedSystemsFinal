@@ -45,7 +45,7 @@ void BMP280::SetConfigurationOption(char reg, char opt)
 
 BmpData BMP280::GetReadings()
 {
-	usleep(10000);
+	//usleep(1000);
 	ioctl(this->I2C_FILE, I2C_SLAVE, this->I2C_DEV_ADDR);
 	char reg[1] = {this->I2C_DATA_ADDR};
 	write(this->I2C_FILE, reg, 1);
@@ -70,7 +70,7 @@ BmpData BMP280::GetReadings()
 	// Stand_by time = 1000 ms(0xA0)
 	this->SetConfigurationOption(this->I2C_CONFIG_REG, this->I2C_STANDBY_TIME);
 
-	usleep(10000);
+	//usleep(1000);
 	// Read 8 bytes of buff from register(0xF7)
 	// pressure msb1, pressure msb, pressure lsb, temp msb1, temp msb, temp lsb, humidity lsb, humidity msb
 	reg[0] = this->I2C_RAW_DATA_REG;

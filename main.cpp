@@ -19,16 +19,16 @@ int main()
 	BMP280 * bmp = new BMP280(i2c_fd);
 	LSM303 * lsm = new LSM303(i2c_fd);
 	NEO6M * neo = new NEO6M();
-	while(true) 
+	while(true)
 	{
 		BmpData data = bmp->GetReadings();
 		std::cout << "BMP data gathered." << std::endl;
 		//delete bmp;
-		usleep(10000);
+		usleep(1000);
 		LsmData lsm_data = lsm->GetReadings();
 		//delete lsm;
 		std::cout << "LSM data gathered." << std::endl;
-		usleep(10000);
+		usleep(1000);
 		GpsData gps_data = neo->GetReadings();
 		//delete neo;
 		std::cout << "GPS data gathered." << std::endl;

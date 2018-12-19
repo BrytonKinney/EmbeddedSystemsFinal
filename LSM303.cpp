@@ -2,15 +2,18 @@
 
 void check_overflow(int * buffer, char * byte_arr) 
 {
-	buffer[0] = (byte_arr[1] << 8) | byte_arr[0];
+	buffer[0] = ((byte_arr[1] << 8) | byte_arr[0]);
 	if(buffer[0] > 32767)
 		buffer[0] -= 65536;
-	buffer[1] = (byte_arr[3] << 8) | byte_arr[2];
+	buffer[1] = ((byte_arr[3] << 8) | byte_arr[2]);
 	if(buffer[1] > 32767)
 		buffer[1] -= 65536;
-	buffer[2] = (byte_arr[5] << 8) | byte_arr[4];
+	buffer[2] = ((byte_arr[5] << 8) | byte_arr[4]);
 	if(buffer[2] > 32767)
 		buffer[2] -= 65536;
+	buffer[0] = buffer[0] >> 4;
+	buffer[1] = buffer[1] >> 4;
+	buffer[2] = buffer[2] >> 4;
 }
 
 LSM303::LSM303(int i2c_fd) 
@@ -62,9 +65,9 @@ void LSM303::GetAccelData(LsmData * data)
 		this->ReadRegister(this->I2C_ACCEL_Z_MSB_REG)
 	};
 	check_overflow(buffer, accel_bytes);
-	data->X_Accel = (double)buffer[0];
-	data->Y_Accel = (double)buffer[1];
-	data->Z_Accel = (double)buffer[2];
+	data->X_Accel = buffer[0];
+	data->Y_Accel = buffer[1];
+	data->Z_Accel = buffer[2];
 	data->Roll = (180.0/3.14159) * atan2((double)(data->Y_Accel), (double)(data->Z_Accel));
 	data->Pitch = (180.0/3.14159) * atan((double)(-data->X_Accel) / ((double)(data->Y_Accel) * sin(data->Roll) + (double)(data->Z_Accel) * cos(data->Roll)));
 	data->Yaw = (180.0/3.14159) * atan((double)data->Y_Accel/(sqrt((double)data->X_Accel * (double)data->Y_Accel + (double)data->Z_Accel * (double)data->Z_Accel)));
@@ -101,6 +104,5 @@ LsmData LSM303::GetReadings()
 
 	this->GetMagData(&data);
 
-	usleep(10000);
 	return data;
 }
