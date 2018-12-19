@@ -46,9 +46,9 @@ void LSM303::GetMagData(LsmData * data)
 		this->ReadRegister(this->I2C_MAG_Z_MSB_REG)
 	};
 	check_overflow(buffer, mag_bytes);
-	data->X_Mag = buffer[0];
-	data->Y_Mag = buffer[1];
-	data->Z_Mag = buffer[2];
+	data->X_Mag = buffer[0] / (100000.0 / 1100.0);
+	data->Y_Mag = buffer[1] / (100000.0/ 1100.0);
+	data->Z_Mag = buffer[2] / (100000.0/ 980.0);
 	data->Heading = ((atan2((float)data->Y_Mag, (float)data->X_Mag) * 180.0 ) / 3.14159);
 	data->Heading = data->Heading < 0 ? data->Heading += 360 : data->Heading;
 }
